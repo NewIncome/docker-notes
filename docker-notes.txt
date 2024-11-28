@@ -1,0 +1,77 @@
+==========------- Docker | notes -------==========
+~~~~~~~~~~ Install Docker ~~~~~~~~~~
+* https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04
+1. Update existing list of packages
+  $ sudo apt update
+2. Install prerequisite packages which let apt use packages over HTTPS
+  $ sudo apt install apt-transport-https ca-certificates curl software-properties-common
+3. Add the GPG key for the official Docker repository to your system
+  $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+4. Add the Docker repository to APT sources. This will also update our package database with the Docker packages from the newly added repo.
+  $ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+5. Make sure you are about to install from the Docker repo instead of the default Ubuntu repo
+  $ apt-cache policy docker-ce
+  // The 'focal' is the important part to see in output: Candidate: 5:27.3.1-1~ubuntu.20.04~focal
+6. Finally, install Docker
+  $ sudo apt install docker-ce
+// Docker should now be installed, the daemon started, and the process enabled to start on boot.
+7. Check that it’s running
+  $ sudo systemctl status docker
+...
+~~~~~~~ Install Docker Desktop ~~~~~~~
+//If not available, you can use https://app.docker.com
+8. After the above you can now install Docker Desktop without downloading the .deb file
+  $ sudo apt-get install docker-desktop
+  // at the end it displays a download error, you can ignore it
+  //For Upgrades, yuo need to download pckg and install again
+9. Load Virtualization Support module manually, with KVM (if it didn't load automatically)
+  $ modprobe kvm
+10. Load the module for the corresponding processor
+  $ modprobe kvm_intel  // depending on the processor,  modprobe kvm_amd
+  // If there are any errors, check in Bios if Virtualization Support is Enabled
+11. Check diagnostics if the above command fails
+  $ kvm-ok
+12. Check if the KVM modules are enabled
+  $ lsmod | grep kvm
+Set up KVM device user permissions
+13. To check ownership of /dev/kvm
+  $ ls -al /dev/kvm
+14. Add your user to the kvm group in order to access the kvm device
+  $ sudo usermod -aG kvm $USER
+15. Sign out and sign back in so that your group membership is re-evaluated. Then Launch DD.
+
+~~~~~~~~~~    Notes     ~~~~~~~~~~
+Ytube:TechWorld with Nana::19'
+• Docker apps are built in layers
+• Docker and Kernel are virtualization tools
+• Docker virtalizaes the ApplicationLayer, and uses the host kernel
+• VM virtualizes the whole OSkernel
+• Docker Workflow
+  + Docker Client: UserInterface for interacting with Docker; terminal or GUI
+  + Docker Host(Daemon): Backgroudn process responsible for managing containers on the host system.
+  + Docker Registry(DockerHub): is the centralized repositry of docker images
+• 
+
+• Commands
+  $ docker [option] [command] [arguments]
+  $ docker ps  , show running containers
+  $ docker run postgres:10.10  , run a specific version of an image in a new container
+	...    from  , specifies the base image to use for the new image
+	...    workdir  , to set working directory
+	...    copy  , copy files from build context to image
+	...    run  , execute commands in the shell during image build; to create a container
+	...    expose  , inform ports to use(listen to)
+	...    env  , to set environment variables
+	...    arg  , defines build time variables
+	...    volume  , creates a mountpoint for externally mounted volumes (for ext storage)
+	...    cmd  , provides default(flexible) commands to execute when the container starts
+	...    entrypoint  , defines default(fixed) executable to run when the container starts
+	...	   pull  , download and install an image on our machine
+
+  $ cat /etc/issue  , to know the version of the linux system   //Ubuntu 22.04.5 LTS
+  $ echo $XDG_CURRENT_DESKTOP  , to know which desktop environment I am using
+  $ docker run -it ubuntu  , to create a container with the ubuntu image
+  	-it  , is for 'interactive'
+
+
+
