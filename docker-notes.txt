@@ -50,12 +50,43 @@ Ytube:TechWorld with Nana::19'
   + Docker Client: UserInterface for interacting with Docker; terminal or GUI
   + Docker Host(Daemon): Backgroudn process responsible for managing containers on the host system.
   + Docker Registry(DockerHub): is the centralized repositry of docker images
-• 
 
-• Commands
+***• A running container can't be accessed right away because it is running in an Isolated Docker Network
+	To access it, 1st we need to EXPOSE the Container to out localNetwork
+	  We do this by PORT BINDING: bind the container's port to the host's port(to make the servce availbale to the outside world)
+/* Standard ports for applications
+   nginx, always runs on port 80
+   redis, always runs on port 6379
+*/
+• Structure of DOCKERFILE
+  + IS basically "The Definition" to use to Build a Docker image
+  + Dockerfiles start from a parent image or "base image"
+  + It is a Docker image that Your image will be based on
+  + You choose the base image, depending on which tools you need to have available
+	ie.: a lightweight linux -> on top of it: node, etc.
+  + The FROM directive, is the beginning of every Dockerfile to call a {base image}
+  + The RUN directive, is to run linux commands, to install dependencies
+    *These commands are run in a shell inside the container environment
+  + The COPY directive, is to copy files or directories from your local to the container
+• Each instruction in the Dockerfile creates one layer, and they are stacked after eachother
+  *eachone is a delta of the change from the previous layer
+• Once built a recently created image, it gets preloaded on our local drive
+
+
+
+---- Commands ----
   $ docker [option] [command] [arguments]
-  $ docker ps  , show running containers
+  $ docker ps  , (Process Status) show running containers
+  			-a  , (all) show all containers: stopped and running
   $ docker run postgres:10.10  , run a specific version of an image in a new container
+  			-d  , (detached) flag to run the container in the background
+  		* it doesn't need to previously pull, it auto pulls the image from docker if it doesn't find it locally
+  			-p {hostPort:containerPort}  , (publish) publish a container's port to the host(any 4 digit port you choose)
+  			* It is a standard to use the same port the container uses in the host
+  			* Only one service can be run on a specific port on the host
+  			--name  , assign a specific name to the container, for easier use
+  	...    stop {container}  , stop one or more running containers
+  	...    start {container}  , re-starts one or more recently created and stopped containers
 	...    from  , specifies the base image to use for the new image
 	...    workdir  , to set working directory
 	...    copy  , copy files from build context to image
@@ -67,11 +98,71 @@ Ytube:TechWorld with Nana::19'
 	...    cmd  , provides default(flexible) commands to execute when the container starts
 	...    entrypoint  , defines default(fixed) executable to run when the container starts
 	...	   pull  , download and install an image on our machine
+	...	   images  , lists the docker images pulled locally
+	...    ps  , check the list of running containers
+			it also shows you the random name docker gives to the container, and the id, port used
+	...    logs {container}  , shows the current logs of the container
+* {container} , the container ID or Name can be used
+	...    build  , to build a docker image from a dockerfile, specifying the directory
+			-t  , to set a name and optionally a tag to the image, "name:tag" format
+			ie.: docker build -t nana-node-app:1.0 .
 
   $ cat /etc/issue  , to know the version of the linux system   //Ubuntu 22.04.5 LTS
   $ echo $XDG_CURRENT_DESKTOP  , to know which desktop environment I am using
   $ docker run -it ubuntu  , to create a container with the ubuntu image
   	-it  , is for 'interactive'
+  	
+---On Error: Cannot connect to the Docker daemon---
+☢ Try 1st with priviledges
+   > $ sudo docker pull ...
+☢ check if docker is running
+   > $ systemctl status docker
+if it was on:
+☢ add the current user to the docker group
+   > $ sudo usermod -aG docker $USER   
+
+
+---1.Example, 1st using docker---
+• nginx, webserver with ui
+1.- Find a docker image from DockerRegistries in DockerHub
+2.- Select the tag of a desired file
+3.- Pull the file in the terminal, with the desired version:
+	//docker pull {imageName}:{tag} = pull an image from a registry
+	$ docker pull nginx:1.23
+3.1.- Check if it pulled the image correctly
+	$ docker images
+4.- Run the image in a container
+	$ docker run nginx:1.23
+5.- Check the running container list
+	$ docker ps
+6.- Stop the port(if it was run detached) and run it Binded/exposded to any desired local port
+	$ docker run -d -p 80:80 nginx:1.23
+	80 is the standard port nginx runs on, can be seen using $ docker ps
+	and now the container can be accessed in a browser specifying thr port, localhost:9000
+
+---2.Example, 1st creation of docker Image, to deploy---
+We need to create a Definition of how to build an image from our application
+It is created in a dockerfile, to create the dockerImage
+- We'll use express.js to start an application on port 3000 that displays a message
+example proy
+> /root
+  > src/
+	> server.js
+	> Dockerfile 
+  > package.json
 
 
 
+
+
+
+----- Symbols ... -----
+✔
+←	→
+☢
+✿	♣	☁					ಠ_ರೃ			ಠ_ಠ
+☆	❤										( ಠ ͜ʖ ರೃ)
+△	Δ	▽						(ʘ‿ʘ)╯
+α	β	ɛ	Ω	Σ							( ͡° ͜ʖ ͡°)
+₿	✉︎	♮	π	♯				(ง ͠° ͟ʖ ͡°)ง
+⚀ ⚁ ⚂ ⚃ ⚄ ⚅								୧༼ಠ益ಠ༽୨
