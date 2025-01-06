@@ -74,7 +74,7 @@ Ytube:TechWorld with Nana::19'
 
 
 
----- Commands ----
+---- CLI Commands ----
   $ docker [option] [command] [arguments]
   $ docker ps  , (Process Status) show running containers
   			-a  , (all) show all containers: stopped and running
@@ -151,6 +151,24 @@ example proy
 	> Dockerfile 
   > package.json
 
+
+---- DockerFile Commands ----
+  1☁ FROM , choose the BaseImage to build this image from
+		And also can build other base libraries on top of it
+		ie.: FROM (base lib):(base OS kernel)  =>  FROM node:19-alpine
+  2☁ COPY , copy files&folders from our local and paste into the container
+		ie.: COPY (what) (where) => COPY package.json /app/
+		*// The slash at the end tells docker to create the Dir if it doesn't exist
+		ie.: COPY src /app/
+  3☁ WORKDIR , set the default location / dir for all following commands
+		Like changing into a dir with 'cd ...' to start working
+  4☁ RUN , will execute any command in a shell inside the container env
+		ie.: RUN npm install
+  5☁ CMD , instruction that is to be executed when the Docker container starts
+		Last command in the file to start the application
+		ie.: CMD ["command", "parameter"] => ["node", "server.js"]
+Then we build our Docker Image with:
+  > docker build -t nana-node-app:1.0 .
 
 
 
