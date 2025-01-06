@@ -40,6 +40,17 @@ Set up KVM device user permissions
   $ sudo usermod -aG kvm $USER
 15. Sign out and sign back in so that your group membership is re-evaluated. Then Launch DD.
 
+--- some Helpful Commands ---
++ Check the status of the docker service
+	$ systemctl status docker
++ View information about the Docker engine
+	$ docker info
++ (1)Start Docker Socket
+	$ sudo systemctl start docker.socket
+  **// The Docker socket is the Unix socket that enables the communication between the Docker client and Docker Daemon
++ (2)Start Docker
+	$ sudo system start docker
+
 ~~~~~~~~~~    Notes     ~~~~~~~~~~
 Ytube:TechWorld with Nana::19'
 • Docker apps are built in layers
@@ -85,6 +96,13 @@ Ytube:TechWorld with Nana::19'
   			* It is a standard to use the same port the container uses in the host
   			* Only one service can be run on a specific port on the host
   			--name  , assign a specific name to the container, for easier use
+  			-e {PASS_VAR=mypass}  , to specify environment variables
+  			--net {network name}  , to run the container in a specific container network
+  	*/* When having many parameters in a CLI command we can separate them with "\" like:
+  	  *	docker run -d \
+	  * -p 27017:27017 \
+	  * --name mongodb \
+	  */ mongo
   	...    stop {container}  , stop one or more running containers
   	...    start {container}  , re-starts one or more recently created and stopped containers
 	...    from  , specifies the base image to use for the new image
@@ -99,14 +117,20 @@ Ytube:TechWorld with Nana::19'
 	...    entrypoint  , defines default(fixed) executable to run when the container starts
 	...	   pull  , download and install an image on our machine
 	...	   images  , lists the docker images pulled locally
-	...    ps  , check the list of running containers
-			it also shows you the random name docker gives to the container, and the id, port used
 	...    logs {container}  , shows the current logs of the container
 * {container} , the container ID or Name can be used
 	...    build  , to build a docker image from a dockerfile, specifying the directory
 			-t  , to set a name and optionally a tag to the image, "name:tag" format
+			.  , at the end, to specify where is the file located, . if in the current dir
 			ie.: docker build -t nana-node-app:1.0 .
-
+	...    exec  , to get a terminal from a container, to debug a container
+			-it  , to run the Interactive Terminal
+			ie.: docker exec -it (containerIdOrName) /bin/bash => docker exec -it CntID bash command
+			*// check env variables with "env" as a command
+			*// exit with "exit"
+	...    network  , to work with Docker Networks
+			ls  , to list all the available networks
+			create {network-name}  , to create a new network
   $ cat /etc/issue  , to know the version of the linux system   //Ubuntu 22.04.5 LTS
   $ echo $XDG_CURRENT_DESKTOP  , to know which desktop environment I am using
   $ docker run -it ubuntu  , to create a container with the ubuntu image
@@ -152,7 +176,7 @@ example proy
   > package.json
 
 
----- DockerFile Commands ----
+---- DockerFile Commands / Directives ----
   1☁ FROM , choose the BaseImage to build this image from
 		And also can build other base libraries on top of it
 		ie.: FROM (base lib):(base OS kernel)  =>  FROM node:19-alpine
@@ -169,6 +193,24 @@ example proy
 		ie.: CMD ["command", "parameter"] => ["node", "server.js"]
 Then we build our Docker Image with:
   > docker build -t nana-node-app:1.0 .
+Then check if your image is up
+  > docker images
+Then run your image
+  > docker run -d -p 3000:3000 nana-node-app:1.0
+Check your app running in your localhost:3000
+Check your logs with the id of your running container
+ > docker logs 1a4971b5304c
+View cointainer Id with
+ > docker ps -a
+ 
+---- to Debug a Container ----
+To get a terminal of the container and maybe:
+ - navigate to a directory inside
+ - check the log file
+ - check configuration
+ - print out env variables
+ we use:
+	$ docker exec -it containerID /bin/bash
 
 
 
