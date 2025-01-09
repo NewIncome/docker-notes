@@ -98,6 +98,10 @@ Ytube:TechWorld with Nana::19'
   			--name  , assign a specific name to the container, for easier use
   			-e {PASS_VAR=mypass}  , to specify environment variables
   			--net {network name}  , to run the container in a specific container network
+  			- v {"host/dir:container/dir"} , (volumes) to persist and/or share data between the host and the container
+  			-i  , (interactive) it keeps the standard input (STDIN) open even if not attached, allowing you to interact with the container
+  			-t  , (terminal) This flag allocates a pseudo-TTY (terminal). It provides a terminal interface for the container, making it easier to interact with command-line applications
+  			//the 2 prev can be used together: -it
   	*/* When having many parameters in a CLI command we can separate them with "\" like:
   	  *	docker run -d \
 	  * -p 27017:27017 \
@@ -105,6 +109,11 @@ Ytube:TechWorld with Nana::19'
 	  */ mongo
   	...    stop {container}  , stop one or more running containers
   	...    start {container}  , re-starts one or more recently created and stopped containers
+  	...    rm  {container(s)}, removes created and stopped containers
+  			-f  , force remove a running container
+  	...    rmi {image(s)}  , remove a docker image
+  	//remove image and related containers, automated
+  	//docker rm $(docker ps -a -q --filter ancestor=[image]) && docker rmi [image]
 	...    from  , specifies the base image to use for the new image
 	...    workdir  , to set working directory
 	...    copy  , copy files from build context to image
@@ -211,6 +220,18 @@ To get a terminal of the container and maybe:
  - print out env variables
  we use:
 	$ docker exec -it containerID /bin/bash
+
+
+---- Docker Snippets ----
+✔ --- VSCODE Instance ---
+docker run -it --name code-server-4 -p 127.0.0.1:8080:8080 \
+  -v "$HOME/.config:/home/coder/.config" \
+  -v "$HOME/CODE/java:/home/coder/project" \
+  -u "$(id -u):$(id -g)" \
+  -e "DOCKER_USER=$USER" \
+  codercom/code-server:latest
+//the config.yaml file is created in $HOME/.config/code-server
+//you can have presets for extensions...
 
 
 
