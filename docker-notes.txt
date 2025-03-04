@@ -233,6 +233,9 @@ docker run -it --name code-server-4 -p 127.0.0.1:8080:8080 \
 //the config.yaml file is created in $HOME/.config/code-server
 //you can have presets for extensions...
 
+// to run already created code-server container
+docker start -i cc-code-server
+
 
 
 
