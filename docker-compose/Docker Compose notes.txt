@@ -1,0 +1,18 @@
+Docker Compose
+---------------
+Used to deploy multiple containers at the same time, that generally work together
+- It needs a "configuration file" called docker-compose.yaml
+- .yaml is a 'Data Serialization Language'
+- Containers go under the "services" section
+
+
+Commands:
+- To run a docker-compose(d-c) file, being inside the d-c dir
+  $ docker-compose up -d
+- To stop & eliminate all containers created
+  $ docker-compose down
+- To only stop the created containers
+  $ docker-compose stop
+- To check active containers
+  $ docker-compose ps
+ 
