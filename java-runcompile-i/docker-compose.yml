@@ -1,0 +1,16 @@
+#version: '3.8'
+services:
+  jd01:
+    build: .
+    container_name: java-pract
+    volumes:
+      - .:/app        # Mount local folder into /app in container
+    stdin_open: true  # Allow interactive input
+    tty: true         # Keeps container running
+
+## start the container
+ #  docker-compose up -d
+ #  docker exec -it java-pract bash
+## then, inside the container
+ #  javac Main.java
+ #  java Main
