@@ -3,16 +3,37 @@ Docker Compose
 Used to deploy multiple containers at the same time, that generally work together
 - It needs a "configuration file" called docker-compose.yaml
 - .yaml is a 'Data Serialization Language'
+- It automatically takes care of Networking
 - Containers go under the "services" section
+- Required attributes of a docker-compose file
+  + version: '3.1'  # version of docker-compose compatible with local version
+  + services:  # containers that you want to run in this file
+    > mongodb: # container name, must be lowercase
+    >  image:  # image to build the container will be built from
+    >  ports:  # list of port mappings 
+        - host:container
+    >  environment:  # environment variables
+    >  dependes_on:  # apps that need to be run first, before running this app
+- for the name, d-c prepends the containing folder name, and adds a postfix a number
 
 
 Commands:
+- If you already have DockerDesktop, you can run d-c with:
+  $ docker compose vesion  # to check the version for example
 - To run a docker-compose(d-c) file, being inside the d-c dir
-  $ docker-compose up -d
+  $ docker-compose up -d  # -d == detached mode, from the terminal
+  or
+  $ docker-compose -f mongo-services.yaml up
+  - ... -f ,  file, to specify a custom compose file
+  - ... -d ,  detached mode
+  - ... -p ,  project-name, to change the prefix for the containers
+  - ... --build ,  to pre-build the docker image
 - To stop & eliminate all containers created
-  $ docker-compose down
+  $ docker-compose <yamlfile> down
 - To only stop the created containers
-  $ docker-compose stop
+  $ docker-compose <yaml> stop
+- To only start again all the created containers
+  $ docker-compose <yaml> start
 - To check active containers
-  $ docker-compose ps
+  $ docker-compose <yaml> ps
  
