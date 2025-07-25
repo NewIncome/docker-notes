@@ -1,0 +1,27 @@
+#version: '3.8'
+services:
+  java:
+    image: openjdk:17
+    container_name: java-dev
+    volumes:
+      - ./src:/workspace  #hostDir:containerDir
+    working_dir: /workspace
+    stdin_open: true  #to interact with the container shell
+    tty: true  #TeleTypeWriter, basically a simulated terminal
+    command: bash
+    #both above lines are options to cotrol how the container handles input/output for interactive use, especially in terminal environments
+
+  code-server:
+    image: codercom/code-server:latest
+    container_name: code-server
+    environment:
+      - PASSWORD=ultrasecret
+    volumes:
+      - ./src:/home/coder/src
+      - ./code-server/config:/home/coder/.local/share/code-server
+    ports:
+      - "8080:8080"
+
+#1 To compile in terminal: docker exec -it java-dev bash
+#2 To run code-server container again: docker container start -d
+#3 To keep you configs: You can move the code-server/config folder across systems
